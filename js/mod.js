@@ -39,9 +39,9 @@ function getPointGen() {
 	if(hasUpgrade("cbb", 11)) gain = gain.add(1)
 	if(hasUpgrade("cbb", 12)) gain = gain.add(2)
 	if(hasUpgrade("cbb", 13)) gain = gain.mul(upgradeEffect("cbb", 13))
-	if(hasUpgrade("cbb", 21)) gain = gain.mul(upgradeEffect("cbb", 21))
 	if(hasUpgrade("cbb", 22) && hasUpgrade("cbb", 112)) gain = gain.add(player.cbb.best).add(player.cbb.points)
 	else if(hasUpgrade("cbb", 22)) gain = gain.add(player.cbb.best)
+	if(hasUpgrade("cbb", 21)) gain = gain.mul(upgradeEffect("cbb", 21))
 	gain = gain.mul(layers.cbb.effect())
 	return gain
 }
