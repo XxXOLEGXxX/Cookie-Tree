@@ -208,7 +208,7 @@ addLayer("cbb", {
         },
         112: {
             title: "Chocolate Flavoured C.B.B.",
-            description: "Unspent C.B.B.'s are included into \"The best so far\" formula.<br/>[Passive Type]",
+            description: "Unspent C.B.B.'s are included into \"The Best So Far\" formula.<br/>[Passive Type]",
             cost: new Decimal(90),
 			currencyDisplayName: "chocolate butter biscuits",
 			currencyInternalName: "points",
