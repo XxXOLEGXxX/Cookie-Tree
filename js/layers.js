@@ -78,7 +78,7 @@ addLayer("cbb", {
 			}
         },
 	    12: {
-            title: "I said MORE points",
+            title: "I Said MORE Points",
             description: "Generates two more points per second.<br/>[Addition Type]",
             cost: new Decimal(20),
 			currencyDisplayName: "points",
@@ -144,7 +144,7 @@ addLayer("cbb", {
 			}
         },
 		22: {
-            title: "The best so far",
+            title: "The Best So Far",
             description: "You gain more points per second BEFORE the previous upgrade effect based on best C.B.B.'s. [Addition Type]",
             cost: new Decimal(375),
 			currencyDisplayName: "points",
