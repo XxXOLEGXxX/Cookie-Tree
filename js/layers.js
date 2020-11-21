@@ -145,7 +145,7 @@ addLayer("cbb", {
         },
 		22: {
             title: "The best so far",
-            description: "You gain more points per second BEFORE the previous upgrade's effect based on best C.B.B. [Addition Type]",
+            description: "You gain more points per second BEFORE the previous upgrade effect based on best C.B.B.'s. [Addition Type]",
             cost: new Decimal(375),
 			currencyDisplayName: "points",
 			currencyInternalName: "points",
@@ -165,7 +165,7 @@ addLayer("cbb", {
 		23: {
             title: "Second Breath",
             description: "Reduces softcap's strength.<br/>(0.8 => 0.85) [Passive Type]",
-            cost: new Decimal(3100),
+            cost: new Decimal(3550),
 			currencyDisplayName: "points",
 			currencyInternalName: "points",
             unlocked() { return hasUpgrade("cbb", 111) }, // The upgrade is only visible when this is true
@@ -209,14 +209,14 @@ addLayer("cbb", {
         112: {
             title: "Chocolate Flavoured C.B.B.",
             description: "Unspent C.B.B.'s are included into \"The best so far\" formula.<br/>[Passive Type]",
-            cost: new Decimal(75),
+            cost: new Decimal(90),
 			currencyDisplayName: "chocolate butter biscuits",
 			currencyInternalName: "points",
 			currencyLayer: "cbb",
             unlocked() { return hasUpgrade("cbb", 22) }, // The upgrade is only visible when this is true
 			onPurchase() {
-				if(player.points < 3850) player.points = player.points.sub(3800)
-				else player.points = player.points.sub(3750)
+				if(player.points < 4600) player.points = player.points.sub(4550)
+				else player.points = player.points.sub(4500)
 			    player.cbb.spentPoints = player.cbb.spentPoints.add(1)
 			},
 			style() {
@@ -234,7 +234,7 @@ addLayer("cbb", {
         113: {
             title: "Cookie Flavoured C.B.B.",
             description: "Unlocks new layer.",
-            cost: new Decimal(100),
+            cost: new Decimal(114),
 			currencyDisplayName: "chocolate butter biscuits",
 			currencyInternalName: "points",
 			currencyLayer: "cbb",
