@@ -145,7 +145,7 @@ addLayer("cbb", {
         },
 		22: {
             title: "The best so far",
-            description: "You gain more points per second BEFORE the previous upgrade effect based on best C.B.B.'s. [Addition Type]",
+            description: "You gain more points per second BEFORE the previous upgrade's effect based on best C.B.B. [Addition Type]",
             cost: new Decimal(375),
 			currencyDisplayName: "points",
 			currencyInternalName: "points",
