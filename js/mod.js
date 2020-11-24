@@ -8,12 +8,12 @@ let modInfo = {
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
 	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	
-	offlineLimit: 1,  // In hours
+	offlineLimit: 99999999999999,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "v0.002",
+	num: "0.002",
 	name: "W.I.P. Update, literally.",
 }
 
