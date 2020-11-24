@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "v0.001.001",
-	name: "Speed Busting Update",
+	num: "v0.002",
+	name: "W.I.P. Update, literally.",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -42,6 +42,7 @@ function getPointGen() {
 	if(hasUpgrade("cbb", 22) && hasUpgrade("cbb", 112)) gain = gain.add(player.cbb.best).add(player.cbb.points)
 	else if(hasUpgrade("cbb", 22)) gain = gain.add(player.cbb.best)
 	if(hasUpgrade("cbb", 21)) gain = gain.mul(upgradeEffect("cbb", 21))
+	if(hasUpgrade("c", 25)) gain = gain.add(buyableEffect("c", 31))
 	gain = gain.mul(layers.cbb.effect())
 	return gain
 }
