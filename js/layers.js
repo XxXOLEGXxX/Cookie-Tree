@@ -1,5 +1,4 @@
 addLayer("cbb", {
-    name: "prestige", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "CBB", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
@@ -263,6 +262,7 @@ addLayer("c", {
     startData() { return {                  // startData is a function that returns default data for a layer. 
         unlocked: true,                     // You can add more variables here to add them to your layer.
         points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
+		hiddenPoints: new Decimal(0),
     }},
 
     color: "#C39338",                       // The color for this layer, which affects many elements.
@@ -271,7 +271,15 @@ addLayer("c", {
 
     update(diff) {
 		if(player.c.buyables[21] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 21)))
-		if(player.c.buyables[31] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 31)))	
+		if(player.c.buyables[31] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 31)))
+		if(player.c.buyables[41] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 41)))
+		if(player.c.buyables[51] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 51)))	
+		if(player.c.buyables[61] >= 1) player.c.points = player.c.points.add(new Decimal(diff).mul(buyableEffect("c", 61)))
+		if(player.c.buyables[21] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 21)))
+		if(player.c.buyables[31] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 31)))
+		if(player.c.buyables[41] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 41)))
+		if(player.c.buyables[51] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 51)))	
+		if(player.c.buyables[61] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 61)))
 	},
 
     requires: new Decimal(100),              // The amount of the base needed to  gain 1 of the prestige currency.
@@ -290,8 +298,8 @@ addLayer("c", {
 			content:
             [["infobox", "build"],
             "main-display",
-			["display-text", function() {return "You're gaining " + format(buyableEffect("c", 21).add(buyableEffect("c", 31))) + " cookies per second."}],
-			["buyable", 21], ["buyable", 31]]
+			["display-text", function() {return "You're gaining " + format(buyableEffect("c", 21).add(buyableEffect("c", 31)).add(buyableEffect("c", 41)).add(buyableEffect("c", 51)).add(buyableEffect("c", 61))) + " cookies per second."}],
+			["buyable", 21], ["buyable", 31], ["buyable", 41], ["buyable", 51], ["buyable", 61]]
 		},
 	    "Upgrades": {
             buttonStyle() {return  {'border-color': '#8F5B39', 'color': 'white'}},
@@ -322,12 +330,12 @@ addLayer("c", {
         lore: {
             title: "Cookies",
             body: "Welcome to the second layer, where cookies becomes the most important currency you have from now on.<br/><br/>" +
-			      "Unlike C.B.B., it doesn't boost anything by default. You gain cookies via clicking on the giant square-ish cookie or buying buyables for passive gain."
+			      "Unlike C.B.B., it doesn't boost anything by default. You gain cookies via clicking on the giant square-ish cookie or buying buildings for passive gain."
         },
         build: {
             title: "Buildings",
             body: "This is where you'll spend the most of your cookies into. Each building grants certain amount of CPS, increasing the amount of cookies passively.<br/><br/>" +
-			      "Oh and by the way. In order to unlock the buildings, you need to have your total exceed their cost."
+			      "In order to unlock the buildings, you need to have your total to exceed their cost... Expect for these two buildings. Good luck."
         },
         achiev: {
             title: "Achievements",
@@ -344,10 +352,11 @@ addLayer("c", {
 			buy() {let eff = new Decimal(1)
 			       if(hasUpgrade("c", 15) && hasUpgrade("c", 14)) eff = eff.add(new Decimal(player.c.buyables[21]).div(2))
 				   else if(hasUpgrade("c", 14)) eff = eff.add(new Decimal(player.c.buyables[21]).div(10))
+				   if(hasUpgrade("c", 12)) eff = eff.add(player.c.buyables[21].div(10))
 		           if(hasUpgrade("c", 11)) eff = eff.mul(2)
-				   if(hasUpgrade("c", 12)) eff = eff.mul(player.c.buyables[21].div(10).add(1))
 				   if(hasUpgrade("c", 13)) eff = eff.mul(2)
 				   player[this.layer].points = player[this.layer].points.add(eff)
+				   player[this.layer].hiddenPoints = player[this.layer].hiddenPoints.add(eff)
 			},
         style() {
                 return {
@@ -361,15 +370,17 @@ addLayer("c", {
 		},
 		},
 		21: {
-			title: "Cursor",
-			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[21]) + "<br/> CPS: " + format(buyableEffect("c", 21))},
-			cost() { return new Decimal(10).mul(new Decimal(1.15).pow(player.c.buyables[21])) },
+			title() {if(player.c.buyables[21] == 0) return "???"
+			         else return "Cursor"},
+			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[21]) + "<br/> CpS: " + format(buyableEffect("c", 21))},
+			cost() { return new Decimal(15).mul(new Decimal(1.15).pow(player.c.buyables[21])) },
 			canAfford() { return player[this.layer].points.gte(this.cost()) },
-			effect() { let eff = new Decimal(0.1)
+			effect() { let eff = new Decimal(0.1).mul(player.c.buyables[21])
+					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
 					   if(hasUpgrade("c", 15) && hasUpgrade("c", 14)) eff = eff.add(new Decimal(player.c.buyables[21]).div(2))
 					   else if(hasUpgrade("c", 14)) eff = eff.add(new Decimal(player.c.buyables[21]).div(10))
+					   if(hasUpgrade("c", 12)) eff = eff.add(player.c.buyables[21].div(10))
 			           if(hasUpgrade("c", 11)) eff = eff.mul(2)
-					   if(hasUpgrade("c", 12)) eff = eff.mul(player.c.buyables[21].div(10).add(1))
 					   if(hasUpgrade("c", 13)) eff = eff.mul(2)
                        return eff },
 			buy() {
@@ -397,11 +408,18 @@ addLayer("c", {
 		},
 		},
 		31: {
-			title: "Modder",
-			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[31]) + "<br/> CPS: " + format(buyableEffect("c", 31))},
+			title() {if(player.c.buyables[31] == 0) return "???"
+			         else return "Modder"},
+			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[31]) + "<br/> CpS: " + format(buyableEffect("c", 31))},
 			cost() { return new Decimal(100).mul(new Decimal(1.15).pow(player.c.buyables[31])) },
 			canAfford() { return player[this.layer].points.gte(this.cost()) },
-			effect() { return player.c.buyables[31] },
+			effect() { let eff = new Decimal(1).mul(player.c.buyables[31])
+					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
+					   if(hasUpgrade("c", 21)) eff = eff.mul(2)
+					   if(hasUpgrade("c", 22)) eff = eff.mul(new Decimal(player.c.buyables[31]).div(100).add(1))
+					   if(hasUpgrade("c", 23)) eff = eff.mul(2)
+					   if(hasUpgrade("c", 24)) eff = eff.mul(new Decimal(player.timePlayed).log(3))
+                       return eff },
 			buy() {
                player[this.layer].points = player[this.layer].points.sub(this.cost())
                player[this.layer].buyables[31] = player[this.layer].buyables[31].add(1)
@@ -426,34 +444,186 @@ addLayer("c", {
 				}
 		},
 		},
+		41: {
+			title() {if(player.c.buyables[41] == 0) return "???"
+			         else return "Discord group"},
+			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[41]) + "<br/> CpS: " + format(buyableEffect("c", 41))},
+			cost() { return new Decimal(1100).mul(new Decimal(1.15).pow(player.c.buyables[41])) },
+			canAfford() { return player[this.layer].points.gte(this.cost()) },
+			effect() { let eff = new Decimal(8).mul(player.c.buyables[41])
+			           if(hasUpgrade("c", 31)) eff = eff.mul(2)
+					   if(hasUpgrade("c", 32)) eff = eff.mul(player.c.buyables[31].div(5).add(1))
+					   if(hasUpgrade("c", 33)) eff = eff.mul(2)
+                       return eff },
+			buy() {
+               player[this.layer].points = player[this.layer].points.sub(this.cost())
+               player[this.layer].buyables[41] = player[this.layer].buyables[41].add(1)
+			},
+			unlocked() {return player.c.hiddenPoints >= 1100},
+        style() {
+			    if(player[this.layer].points.gte(this.cost()))
+                return {
+                'border-color': '#898770',
+				'background-color': '#B6B0A0',
+				'color': '#736E5F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+				else return {
+				'border-color': '#444337',
+				'background-color': '#5B5850',
+				'color': '#39372F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+		},
+		},
+		51: {
+			title: "Discord group",
+			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[51]) + "<br/> CpS: " + format(buyableEffect("c", 51))},
+			cost() { return new Decimal(12000).mul(new Decimal(1.15).pow(player.c.buyables[51])) },
+			canAfford() { return player[this.layer].points.gte(this.cost()) },
+			effect() { let eff = new Decimal(47).mul(player.c.buyables[51])
+					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
+                       return eff },
+			buy() {
+               player[this.layer].points = player[this.layer].points.sub(this.cost())
+               player[this.layer].buyables[51] = player[this.layer].buyables[51].add(1)
+			},
+			unlocked() {return false},
+        style() {
+			    if(player[this.layer].points.gte(this.cost()))
+                return {
+                'border-color': '#898770',
+				'background-color': '#B6B0A0',
+				'color': '#736E5F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+				else return {
+				'border-color': '#444337',
+				'background-color': '#5B5850',
+				'color': '#39372F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+		},
+		},
+		61: {
+			title: "Discord Group",
+			display() { return "Cost: " + format(this.cost()) + " cookies. Amount: " + formatWhole(player.c.buyables[61]) + "<br/> CpS: " + format(buyableEffect("c", 61))},
+			cost() { return new Decimal(130000).mul(new Decimal(1.15).pow(player.c.buyables[61])) },
+			canAfford() { return player[this.layer].points.gte(this.cost()) },
+			effect() { let eff = new Decimal(260).mul(player.c.buyables[61])
+					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
+                       return eff },
+			buy() {
+               player[this.layer].points = player[this.layer].points.sub(this.cost())
+               player[this.layer].buyables[61] = player[this.layer].buyables[61].add(1)
+			},
+			unlocked() {return false},
+        style() {
+			    if(player[this.layer].points.gte(this.cost()))
+                return {
+                'border-color': '#898770',
+				'background-color': '#B6B0A0',
+				'color': '#736E5F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+				else return {
+				'border-color': '#444337',
+				'background-color': '#5B5850',
+				'color': '#39372F',
+				'font-size': '15px',
+                'height': '64px',
+                'width': '300px'
+				}
+		},
+		},
 	},
 	upgrades: {
-		rows: 1,
+		rows: 5,
 		cols: 5,
 		11: {
 			title: "LMB Mashing",
-			description: "The mouse and cursors are twice as effecient.<br/>[Passive Type]",
+			description: "The mouse and cursors are twice as effecient.<br/>[Multiplier Type]",
 			cost: new Decimal(100),
 		},
 		12: {
 			title: "Click Frenzy",
-			description: "The mouse and cursors make +0.1 more cookies per cursor.<br/>[Passive Type]",
+			description: "The mouse and cursors make +0.1 more base CpS per cursor.<br/>[Addition Type]",
 			cost: new Decimal(500),
 		},
 		13: {
 			title: "Ambidextrous",
-			description: "The mouse and cursors are twice as effecient.<br/>[Passive Type]",
+			description: "The mouse and cursors are twice as effecient.<br/>[Multiplier Type]",
 			cost: new Decimal(10000),
 		},
 		14: {
 			title: "Thousand Fingers",
-			description: "The mouse and cursors make +0.1 more cookies per non-cursor buildings.<br/>[Passive Type]",
+			description: "The mouse and cursors make +0.1 more CpS per non-cursor building.<br/>[Addition Type]",
 			cost: new Decimal(100000),
 		},
 		15: {
 			title: "Gaming Mouse",
-			description: "Multiplies the gain from \"Gaming Mouse\" by 5.<br/>[Passive Type]",
+			description: "Multiplies the gain from \"Gaming Mouse\" by 5.<br/>[Multiplier Type]",
 			cost: new Decimal(10000000),
+		},
+		21: {
+			title: "Chair of Motivation",
+			description: "Modders are twice as effecient.<br/>[Multiplier Type]",
+			cost: new Decimal(1000),
+		},
+		22: {
+			title: "Copy and Paste",
+			description: "Modders gain +1% CpS per modder.<br/>[Multiplier Type]",
+			cost: new Decimal(5000),
+		},
+		23: {
+			title: "Cookie Dew",
+			description: "Modders are twice as effecient.<br/>[Multiplier Type]",
+			cost: new Decimal(50000),
+		},
+		24: {
+			title: "Actually Learning",
+			description: "Modders produce more cookies based on time since the beginning of game.<br/>[Multiplier Type]",
+			cost: new Decimal(5000000),
+		},
+		25: {
+			title: "Oops...",
+			description: "Modders are added into point gain formula after 6 point upgrades.<br/>[Passive Type]",
+			cost: new Decimal(500000000),
+		},
+		31: {
+			title: "Collaboration",
+			description: "Discord groups are twice as effecient.<br/>[Multiplier Type]",
+			cost: new Decimal(10000),
+		},
+		32: {
+			title: "Linked Minds",
+			description() { return "Discord groups are " + formatWhole(player.c.buyables[31].div(5).add(1)) + "x more effecient. (Effect depends on Modders)<br/>[Multiplier Type]"},
+			cost: new Decimal(50000),
+		},
+		33: {
+			title: "Instant Updates",
+			description: "Discord groups are twice as effecient.<br/>[Multiplier Type]",
+			cost: new Decimal(500000),
+		},
+		34: {
+			title: "New Idea [W.I.P.]",
+			description: "Discord groups manages to unlock Golden Cookie feature.<br/>[Passive Type]",
+			cost: new Decimal(2).pow(1.79e308),
+		},
+		35: {
+			title: "Big Brain Moment",
+			description: "All other buildings gain +1% base CpS per discord group.<br/>[Multiplier Type]",
+			cost: new Decimal(5000000000),
 		},
 	}
 })
