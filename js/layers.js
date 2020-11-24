@@ -304,7 +304,8 @@ addLayer("c", {
 	    "Upgrades": {
             buttonStyle() {return  {'border-color': '#8F5B39', 'color': 'white'}},
 			content:
-            ["main-display",
+            [["infobox", "upgrade"],
+			"main-display",
 			"upgrades"]
 		},
 	    "Achievements": {
@@ -336,6 +337,11 @@ addLayer("c", {
             title: "Buildings",
             body: "This is where you'll spend the most of your cookies into. Each building grants certain amount of CPS, increasing the amount of cookies passively.<br/><br/>" +
 			      "In order to unlock the buildings, you need to have your total to exceed their cost... Expect for these two buildings. Good luck."
+        },
+        upgrade: {
+            title: "Upgrades",
+            body: "This is where you can buy upgrades with all kinds of effects. Some upgrades may give a buff to your buildings, some may modify formula, some may even add in new features! Cool, huh?<br/><br/>" +
+			      "Just like buildings, in order to unlock the upgrades, you need to own certain amount of building."
         },
         achiev: {
             title: "Achievements",
