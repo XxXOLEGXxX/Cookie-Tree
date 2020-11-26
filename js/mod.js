@@ -8,13 +8,13 @@ let modInfo = {
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
 	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	
-	offlineLimit: 1,  // In hours
+	offlineLimit: 99999999999999,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.003",
+	name: "Yet another update.",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -39,9 +39,10 @@ function getPointGen() {
 	if(hasUpgrade("cbb", 11)) gain = gain.add(1)
 	if(hasUpgrade("cbb", 12)) gain = gain.add(2)
 	if(hasUpgrade("cbb", 13)) gain = gain.mul(upgradeEffect("cbb", 13))
-	if(hasUpgrade("cbb", 21)) gain = gain.mul(upgradeEffect("cbb", 21))
 	if(hasUpgrade("cbb", 22) && hasUpgrade("cbb", 112)) gain = gain.add(player.cbb.best).add(player.cbb.points)
 	else if(hasUpgrade("cbb", 22)) gain = gain.add(player.cbb.best)
+	if(hasUpgrade("cbb", 21)) gain = gain.mul(upgradeEffect("cbb", 21))
+	if(hasUpgrade("c", 25)) gain = gain.add(buyableEffect("c", 31))
 	gain = gain.mul(layers.cbb.effect())
 	return gain
 }
