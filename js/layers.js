@@ -283,15 +283,16 @@ addLayer("c", {
 		if(player.c.buyables[41] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 41)))
 		if(player.c.buyables[51] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 51)))	
 		if(player.c.buyables[61] >= 1) player.c.hiddenPoints = player.c.hiddenPoints.add(new Decimal(diff).mul(buyableEffect("c", 61)))
-		if(hasUpgrade("c", 41)) player.c.oof = new Decimal(player.c.buyables[51]).div(10).mul(new Decimal(diff))
+		if(hasUpgrade("c", 41)) player.c.oof = new Decimal(player.c.buyables[51]).div(10)
 		if(hasUpgrade("c", 42)) player.c.oof = player.c.oof.mul(3)
-		if(hasUpgrade("c", 43)) player.c.oof = player.c.oof.mul(new Decimal(player.c.buyables[51]).log())
-		if(hasUpgrade("c", 45)) player.c.oof = player.c.oof.log(3)
-		player.c.member = player.c.member.add(player.c.oof)
+		if(hasUpgrade("c", 43)) player.c.oof = player.c.oof.mul(new Decimal(player.c.buyables[51]).root(10))
+		if(hasUpgrade("c", 45)) player.c.oof = player.c.oof.root(3).root(3).root(3)
+		player.c.member = player.c.member.add(player.c.oof.mul(new Decimal(diff)))
 		if(hasUpgrade("c", 41)) player.c.memberCpS = new Decimal(player.c.buyables[51]).div(10)
 		if(hasUpgrade("c", 42)) player.c.memberCpS = player.c.memberCpS.mul(3) 
-		if(hasUpgrade("c", 43)) player.c.memberCpS = player.c.memberCpS.mul(new Decimal(player.c.buyables[51]).log())
-		if(hasUpgrade("c", 45)) player.c.memberCpS = player.c.memberCpS.div(60).log(3).mul(60)
+		if(hasUpgrade("c", 43)) player.c.memberCpS = player.c.memberCpS.mul(new Decimal(player.c.buyables[51]).root(10))
+		if(hasUpgrade("c", 45)) player.c.memberCpS = player.c.memberCpS.root(3).root(3).root(3)
+		player.c.memberCpS = player.c.memberCpS
 	},
 
     requires: new Decimal(100),              // The amount of the base needed to  gain 1 of the prestige currency.
@@ -312,7 +313,7 @@ addLayer("c", {
             "main-display",
 			["display-text", function() {return "You're gaining " + format(buyableEffect("c", 21).add(buyableEffect("c", 31)).add(buyableEffect("c", 41)).add(buyableEffect("c", 51)).add(buyableEffect("c", 61))) + " cookies per second."}],
 			["display-text", function() {if(hasUpgrade("c", 41)) return "You're gaining " + format(player.c.memberCpS) + " members per second.<br/>You currently have " + formatWhole(new Decimal(player.c.member).floor()) + " members in your discord servers."}],
-			["display-text", function() {if(hasUpgrade("c", 41) && player.c.member >= 100) return "You currently have " + formatWhole(new Decimal(player.c.member).div(100).floor()) + " epic modders in your discord servers, increasing the amount of modders you own and multiplying modders's CpS by " + format(new Decimal(player.c.member).div(100).floor().add(1).root(1.5))}],
+			["display-text", function() {if(hasUpgrade("c", 41) && player.c.member >= 100) return "You currently have " + formatWhole(new Decimal(player.c.member).div(100).floor()) + " epic modders in your discord servers, increasing the amount of modders you own and multiplying modders's CpS by " + format(new Decimal(player.c.member).div(100).floor().add(1).root(10))}],
 			["buyable", 21], ["buyable", 31], ["buyable", 41], ["buyable", 51], ["buyable", 61]]
 		},
 	    "Upgrades": {
@@ -398,12 +399,12 @@ addLayer("c", {
 			canAfford() { return player[this.layer].points.gte(this.cost()) },
 			effect() { let eff = new Decimal(0.1).mul(player.c.buyables[21])
 			           let up14 = player.c.buyables[31].add(new Decimal(player.c.member).div(100).floor()).div(10).add(player.c.buyables[41].div(10)).add(player.c.buyables[51].div(10))
-					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
 					   if(hasUpgrade("c", 15) && hasUpgrade("c", 14)) up14 = up14.mul(5)
 					   if(hasUpgrade("c", 14)) eff = eff.add(up14)
 					   if(hasUpgrade("c", 12)) eff = eff.add(player.c.buyables[21].div(10))
 			           if(hasUpgrade("c", 11)) eff = eff.mul(2)
 					   if(hasUpgrade("c", 13)) eff = eff.mul(2)
+					   if(hasUpgrade("c", 35)) eff = eff.mul(player.c.buyables[41].div(100).add(1))
                        return eff },
 			buy() {
                player[this.layer].points = player[this.layer].points.sub(this.cost())
@@ -441,8 +442,8 @@ addLayer("c", {
 					   if(hasUpgrade("c", 21)) eff = eff.mul(2)
 					   if(hasUpgrade("c", 22)) eff = eff.mul(new Decimal(player.c.buyables[31]).div(100).add(1))
 					   if(hasUpgrade("c", 23)) eff = eff.mul(2)
-					   if(hasUpgrade("c", 24)) eff = eff.mul(new Decimal(player.timePlayed).log(3))
-					   if(player.c.member >= 100) eff = eff.mul(new Decimal(player.c.member).div(100).floor().add(1).root(1.5)).div(player.c.buyables[31]).mul(player.c.buyables[31].add(new Decimal(player.c.member).div(100).floor()))
+					   if(hasUpgrade("c", 24)) eff = eff.mul(new Decimal(player.timePlayed).log(60))
+					   if(player.c.member >= 100) eff = eff.mul(new Decimal(player.c.member).div(100).floor().add(1).root(10)).div(player.c.buyables[31]).mul(player.c.buyables[31].add(new Decimal(player.c.member).div(100).floor()))
                        return eff },
 			buy() {
                player[this.layer].points = player[this.layer].points.sub(this.cost())
@@ -476,7 +477,7 @@ addLayer("c", {
 			canAfford() { return player[this.layer].points.gte(this.cost()) },
 			effect() { let eff = new Decimal(8).mul(player.c.buyables[41])
 			           if(hasUpgrade("c", 31)) eff = eff.mul(2)
-					   if(hasUpgrade("c", 32)) eff = eff.mul(player.c.buyables[31].div(5).add(1))
+					   if(hasUpgrade("c", 32)) eff = eff.mul(player.c.buyables[31].add(new Decimal(player.c.member).div(100).floor()).div(5).add(1))
 					   if(hasUpgrade("c", 33)) eff = eff.mul(2)
                        return eff },
 			buy() {
@@ -646,7 +647,7 @@ addLayer("c", {
 		},
 		32: {
 			title: "Linked Minds",
-			description() { return "Discord groups are " + formatWhole(player.c.buyables[31].div(5).add(1)) + "x more effecient. (Effect depends on Modders)<br/>[Multiplier Type]"},
+			description() { return "Discord groups are " + formatWhole(player.c.buyables[31].add(new Decimal(player.c.member).div(100).floor()).div(5).add(1)) + "x more effecient. (Effect depends on Modders)<br/>[Multiplier Type]"},
 			cost: new Decimal(55000),
 			unlocked() {return player.c.buyables[41] >= 10},
 		},
@@ -694,7 +695,7 @@ addLayer("c", {
 		},
 		45: {
 			title: "@everyone",
-			description: "Discord servers are more effecient based on members... With inexchange of having MpS root cubed. <br/>[Passive Type]",
+			description: "Discord servers are more effecient based on members... With inexchange of having MpS root cubed thrice. <br/>[Passive Type]",
 			cost: new Decimal(60000000000),
 			unlocked() {return player.c.buyables[51] >= 100},
 		},
